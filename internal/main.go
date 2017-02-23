@@ -60,17 +60,28 @@ func main() {
 
 	var inFile *os.File
 	var outFile *os.File
+	var err error
 
 	if flags.inFile == "" {
 		inFile = os.Stdin
 	} else {
-		os.Open(flags.inFile)
+		inFile, err = os.Open(flags.inFile)
+	}
+
+	if err != nil {
+		stderr("Failed to open in-file: %v", err)
+		os.Exit(1)
 	}
 
 	if flags.outFile == "" {
 		outFile = os.Stdout
 	} else {
-		os.Create(flags.outFile)
+		outFile, err = os.Create(flags.outFile)
+	}
+
+	if err != nil {
+		stderr("Failed to open out-file: %v", err)
+		os.Exit(1)
 	}
 
 	dataIn, err := ioutil.ReadAll(inFile)
